@@ -71,7 +71,6 @@ function ntrp(node: TreeNode | null,data:number) : number[] {
         return right;
     }
     return [];
-
 }
 
 console.log(ntrp(root,8));
