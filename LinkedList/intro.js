@@ -101,6 +101,72 @@ var LinkedList = /** @class */ (function () {
                 return -1;
             return node.val;
         };
+        this.addAt = function (val, idx) {
+            if (idx == 0) {
+                this.addFirst(val);
+                return;
+            }
+            else if (idx == this.size) {
+                this.addLast(val);
+                return;
+            }
+            else if (idx > this.size || idx < 0) {
+                console.log("Index out of bounds!");
+                return;
+            }
+            var newNode = new ListNode(val);
+            var nodeAtIdx = this.getNodeAt(idx);
+            var nodeAtIdxm1 = this.getNodeAt(idx - 1);
+            nodeAtIdxm1.next = newNode;
+            newNode.next = nodeAtIdx;
+            this.size++;
+        };
+        this.removeAt = function (idx) {
+            if (idx == 0) {
+                return this.removeFirst();
+            }
+            else if (idx == this.size - 1) {
+                return this.removeLast();
+            }
+            else if (idx < 0 || idx >= this.size) {
+                console.log("Index Out Of Bounds!");
+                return -1;
+            }
+            var prev = this.getNodeAt(idx - 1);
+            var data = prev.next.val;
+            prev.next = prev.next.next;
+            this.size--;
+            return data;
+        };
+        this.reverseBruteForce = function () {
+            var left = 0;
+            var right = this.size - 1;
+            while (left < right) {
+                var lnode = this.getNodeAt(left);
+                var rnode = this.getNodeAt(right);
+                var temp = lnode.val;
+                lnode.val = rnode.val;
+                rnode.val = temp;
+                left++;
+                right--;
+            }
+        };
+        this.reverseOptimized = function () {
+            if (this.size == 0 || this.size == 1)
+                return;
+            var prev = null;
+            var curr = this.head;
+            var next = curr.next;
+            while (curr != null) {
+                curr.next = prev;
+                prev = curr;
+                curr = next;
+                if (next != null)
+                    next = next.next;
+            }
+            this.tail = this.head;
+            this.head = prev;
+        };
         this.head = null;
         this.tail = null;
         this.size = 0;
@@ -113,7 +179,6 @@ ll.addLast(20);
 ll.addLast(30);
 ll.addLast(40);
 ll.addLast(50);
-ll.addLast(75);
-ll.addFirst(100);
 ll.display();
-console.log(ll.getValueAt(5));
+ll.reverseOptimized();
+ll.display();

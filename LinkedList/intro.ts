@@ -113,23 +113,102 @@ class LinkedList {
         }
         return temp;
     }
+
     getValueAt = function(idx:number):number{
         let node = this.getNodeAt(idx);
         if(node == null) return -1;
         return node.val;
     }
 
-}
+    addAt = function(val:number, idx:number){
+        if(idx == 0){
+            this.addFirst(val);
+            return;
+        }else if(idx == this.size){
+            this.addLast(val);
+            return;
+        }else if(idx > this.size || idx < 0){
+            console.log("Index out of bounds!");
+            return;
+        }
+        let newNode = new ListNode(val);
+        let nodeAtIdx = this.getNodeAt(idx);
+        let nodeAtIdxm1 = this.getNodeAt(idx-1);
+        nodeAtIdxm1.next = newNode;
+        newNode.next = nodeAtIdx;
+        this.size++;
+    }
 
+    removeAt = function(idx:number) : number{
+        if(idx == 0){
+            return this.removeFirst();
+        }else if(idx == this.size-1){
+            return this.removeLast();
+        }else if(idx < 0 || idx >= this.size){
+            console.log("Index Out Of Bounds!");
+            return -1;
+        }
+        let prev = this.getNodeAt(idx-1);
+        let data = prev.next.val;
+        prev.next = prev.next.next;
+        this.size--;
+        return data;
+    }
+
+    reverseBruteForce = function(){
+        let left = 0;
+        let right = this.size-1;
+        while(left < right){
+            let lnode = this.getNodeAt(left);
+            let rnode = this.getNodeAt(right);
+
+            let temp = lnode.val;
+            lnode.val = rnode.val;
+            rnode.val = temp;
+
+            left++;
+            right--;
+        }
+    }
+    reverseOptimized = function (){
+        if(this.size==0 || this.size == 1) return;
+
+        let prev  = null;
+        let curr = this.head;
+        let next = curr.next;
+        
+        while(curr != null){
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+            if(next != null) next = next.next;
+        }
+
+        this.tail = this.head;
+        this.head = prev;
+    }
+}
+function middleNode(head: ListNode | null): ListNode | null {
+    if(head == null) return null;
+    if(head.next == null) return head;
+
+    let slow : ListNode | null = head;
+    let fast : ListNode | null = head;
+
+    while(fast!=null && fast.next != null){
+        slow = slow.next;
+        fast = fast.next.next;
+    }
+    return slow;
+};
 let ll = new  LinkedList();
 ll.addLast(10);
 ll.addLast(20);
 ll.addLast(30);
 ll.addLast(40);
 ll.addLast(50);
-ll.addLast(75);
-ll.addFirst(100);
-
 ll.display();
 
-console.log(ll.getValueAt(5));
+ll.reverseOptimized();
+ll.display();
+
